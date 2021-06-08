@@ -1,0 +1,197 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+```{r}
+df = read.csv('~/R/R project/Datasets/mlb_games_cleaned.csv')
+head(df)
+
+```
+
+```{r}
+summary(df)
+```
+```{r}
+hist(df$streak_W)
+
+```
+```{r}
+hist(df$streak_L)
+```
+```{r}
+library(ggplot2)
+library(dplyr)
+
+```
+```{r}
+df1 <- df %>% select(team, win_or_lose, runs, runs_against, rank, cli, games_back, streak_W, streak_L, home_away_home, home_away_away)
+```
+```{r}
+plot(df$runs, df$rank)
+```
+```{r}
+plot(df$runs, df$streak_W)
+```
+```{r}
+plot(df$runs, df$cli)
+```
+```{r}
+plot(df$win_or_lose, df$runs)
+```
+
+```{r}
+ggplot(df, aes(x = win_or_lose, y = runs)) + geom_point()
+```
+```{r}
+ggplot(df, aes(x = rank, y = runs)) + geom_point()
+```
+```{r}
+plot <- ggplot(df, aes(x = runs)) + geom_bar(stat = 'count', fill='purple')
+plot + theme(plot.title=element_text(hjust=0.5)) + ggtitle('Histogram of Runs')
+
+```
+```{r}
+ggplot(df, aes(x = streak_W)) + geom_bar(stat = 'count')
+```
+```{r}
+ggplot(df, aes(x = cli)) + geom_bar(stat = 'count')
+
+```
+
+
+```{r}
+ggplot(df, aes(x = win_or_lose, y = runs, fill = factor(win_or_lose))) + geom_bar(stat = 'summary', fun.y = "mean") + scale_color_manual(values=c('#999999','#E69F00'))
+```
+
+```{r}
+ggplot(df, aes(x = rank, y = cli)) + geom_bar(stat = 'summary')
+
+```
+```{r}
+pl = ggplot(df, aes(x = team, y = runs)) + geom_bar(stat='summary')
+plot + theme(axis.text.x=element_text(angle=90), plot.title=element_text(hjust=0.5)) + ggtitle('Runs by team')
+```
+
+```{r}
+plot = ggplot(df, aes(x = year, y = runs)) + geom_bar(stat='summary')
+plot
+
+```
+
+```{r}
+ggplot(df, aes(x = team, y = streak_W)) + geom_bar(stat='summary')
+```
+```{r}
+plot <- ggplot(df, aes(x = streak_W, y = runs)) + geom_bar(stat='summary', fill = 'purple')
+plot + theme(plot.title=element_text(hjust=0.5)) + ggtitle('Run by winning streak')
+```
+```{r}
+ggplot(df, aes(x = rank, y = runs)) + geom_bar(stat='summary')
+```
+
+```{r}
+ggplot(df, aes(x = cli))+ geom_bar(stat = 'count') + coord_cartesian(xlim = c(0,3))
+```
+
+```{r}
+ggplot(df, aes(x = streak_W))+ geom_bar(stat = 'count') + coord_cartesian(xlim = c(0,13))
+```
+
+```{r}
+plot = ggplot(df, aes(x = team, y = win_or_lose)) + geom_bar(stat='summary')
+plot + theme(axis.text.x=element_text(angle=90, size=rel(0.5)), plot.title=element_text(hjust=0.3)) + ggtitle('Winning percentage by team')
+```
+
+```{r}
+plot = ggplot(df, aes(x = year, y = win_or_lose)) + geom_bar(stat='summary')
+plot
+```
+```{r}
+
+plot <- ggplot(df, aes(x = runs, y = cli)) + geom_point()
+plot
+```
+
+```{r}
+plot = ggplot(df, aes(x = year, y = cli)) + geom_bar(stat='summary')
+plot
+
+```
+
+```{r}
+
+plot = ggplot(df, aes(x = reorder(team, -win_or_lose), y = win_or_lose)) + geom_bar(stat='summary', fill='steelblue')
+plot + theme(axis.text.x=element_text(angle=90, size=rel(0.75)), plot.title=element_text(hjust=0.5)) + ggtitle('Winning percentage by team')
+
+```
+
+
+```{r}
+plot(df1)
+```
+
+```{r}
+plot = ggplot(df, aes(x = runs, y = win_or_lose)) + geom_point(stat='summary', color = 'steelblue')
+plot + theme(axis.text.x=element_text(angle=90, size=rel(0.75)), plot.title=element_text(hjust=0.5)) + ggtitle('Winning percentage by run')
+
+```
+
+```{r}
+plot = ggplot(df, aes(x = reorder(team, -win_or_lose), y = win_or_lose)) + geom_bar(stat='summary', fill='steelblue')
+plot + theme(axis.text.x=element_text(angle=90, size=rel(0.75)), plot.title=element_text(hjust=0.5)) + ggtitle('Winning percentage by team')
+
+```
+```{r}
+plot = ggplot(df, aes(x = g, y = runs, color = cli)) + geom_point(stat='summary')
+plot + theme(axis.text.x=element_text(angle=90, size=rel(0.75)), plot.title=element_text(hjust=0.5)) + ggtitle('Winning percentage by team')
+
+```
+
+```{r}
+plot = ggplot(df, mapping = aes(x = g, y = runs)) + geom_point(stat='summary') + geom_smooth(method='lm')
+plot + theme(plot.title=element_text(hjust=0.5)) + ggtitle('Run by game')
+
+```
+
+```{r}
+ggplot(df, aes(x = reorder(streak_W, -runs), y = runs))+ geom_bar(stat = 'summary', fill='steelblue') + theme(plot.title=element_text(hjust=0.5)) + ggtitle('Run by winning streak')
+```
+
+```{r}
+ggplot(df, aes(x = reorder(streak_L, -runs), y = runs))+ geom_bar(stat = 'summary', fill='steelblue') + theme(plot.title=element_text(hjust=0.5)) + ggtitle('Run by losing streak')
+```
+
+```{r}
+plot <- ggplot(df, aes(x = cli, y = runs)) + geom_point(alpha=0.5) + geom_smooth(method='lm')
+plot + theme(plot.title=element_text(hjust=0.5)) + ggtitle('Run by CLI')
+```
+
+```{r}
+plot <- ggplot(df, aes(x = games_back, y = runs)) + geom_point()
+plot + theme(plot.title=element_text(hjust=0.5)) + ggtitle('Run by games back')
+
+```
+
+```{r}
+plot <- ggplot(df, aes(x = home_away_home, y = runs)) + geom_bar(stat='summary', fill='purple')
+plot + theme(plot.title=element_text(hjust=0.5)) + ggtitle('Run by home or away')
+
+```
+
+```{r}
+plot <- ggplot(df, aes(x = rank, y = runs)) + geom_bar(stat='summary', fill='steelblue')
+plot + theme(plot.title=element_text(hjust=0.5)) + ggtitle('Run by team ranking')
+
+```
+
